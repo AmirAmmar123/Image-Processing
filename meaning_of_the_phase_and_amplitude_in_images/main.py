@@ -50,7 +50,7 @@ ANNA_Img_f_shifted = np.fft.fftshift(ANNA_Img_f);
 phase_anna = np.angle(ANNA_Img_f_shifted)
 log_ANNA_Img_f_shifted = logarithmic_display_of_image(ANNA_Img_f_shifted)
 # AMPl_ANNA = np.abs(ANNA_Img_f_shifted)
-AMPl_ANNA = np.abs(log_ANNA_Img_f_shifted)
+AMPl_ANNA = log_ANNA_Img_f_shifted
 plt.figure(figsize=(16,8));
 plt.subplot(2,2,1)
 plt.imshow(CAT_I, cmap="gray");
@@ -92,13 +92,18 @@ random_values_for_phase = np.random.uniform(np.min(phase_anna), np.max(phase_ann
 
 
 ampl_rand_phase_anna = random_values_for_ampl* np.exp(1j * phase_anna)
-phase_rand_ampl_anna = np.abs(ANNA_Img_f_shifted) * np.exp(1j * random_values_for_phase)
+phase_rand_ampl_anna = ANNA_Img_f_shifted * np.exp(1j * random_values_for_phase)
 
+out1 = np.fft.ifftshift(ampl_rand_phase_anna)
+out1 = np.fft.ifft2(out1)
+
+out2 = np.fft.ifftshift(phase_rand_ampl_anna)
+out2 = np.fft.ifft2(out2)
 plt.figure(figsize=(16,8));
 plt.subplot(1,2,1)
-plt.imshow(np.abs(ampl_rand_phase_anna), cmap="gray");
+plt.imshow(np.abs(out1), cmap="gray");
 plt.title('randome amplitude with anna phase');
-plt.subplot(2,2,2)
-plt.imshow(np.abs(phase_rand_ampl_anna), cmap="gray");
+plt.subplot(1,2,2)
+plt.imshow(np.abs(out2), cmap="gray");
 plt.title("randome phase with anna amplitude");
 plt.show()
