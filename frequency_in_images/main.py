@@ -31,7 +31,8 @@ def compare_images(img1,img2, **args):
   plt.title(args['title2'])
   plt.xlabel(args['xlabel2'])
   plt.ylabel(args['ylabel2'])
-  plt.savefig(args['saveSrc'])
+  if( args['save'] ):
+    plt.savefig(args['saveSrc'])
   plt.show()
 
 
@@ -52,7 +53,8 @@ log_image = logarithmic_display_of_image(fshift);
 #                 xlabel1='size', ylabel1='size',
 #                 xlabel2='u',
 #                 ylabel2='v',
-#                 saveSrc='./frequency_in_images/outPut.jpg');
+#                 saveSrc='./frequency_in_images/outPut.jpg',
+#                 save=True);
 
 
 
@@ -70,11 +72,11 @@ y_axis_sorted = np.sort(I1_f, axis=0)
 # Create an output image initialized with zeros
 output_image_fft = np.zeros(I1_f.shape)
 
-# Take the partitions
-output_image_fft[:, :x_partition] = x_axis_sorted[:, :x_partition]
-output_image_fft[:, -x_partition:] = x_axis_sorted[:, -x_partition:]
-output_image_fft[:y_partition, :]  = y_axis_sorted[:y_partition, :]
-output_image_fft[-y_partition:, :] =  y_axis_sorted[-y_partition:, :]
+# Take the magnitude of complex values and assign them to output_image_fft
+output_image_fft[:, :x_partition] = np.abs(x_axis_sorted[:, :x_partition])
+output_image_fft[:, -x_partition:] = np.abs(x_axis_sorted[:, -x_partition:])
+output_image_fft[:y_partition, :] = np.abs(y_axis_sorted[:y_partition, :])
+output_image_fft[-y_partition:, :] = np.abs(y_axis_sorted[-y_partition:, :])
 
 output_image_fft_shift = np.fft.fftshift(output_image_fft)
 # plt.imshow(logarithmic_display_of_image(output_image_fft_shift ),cmap="gray")
@@ -86,13 +88,40 @@ output_image_restores= np.fft.ifft2(output_image_SHIFTED_back)
 
 
 # # Plot the original image and the transformed image
-# disply = logarithmic_display_of_image(output_image_fft_shift )
-# compare_images(disply, np.abs(output_image_restores), 
-#                 title1='5% lowest frequencies of the image in the x and y axis', 
-#                 title2='Inverse Fourier Transformed of 5% lowest frequencies of the image in the x and y axis',
-#                 xlabel1='Width', ylabel1='Height',
-#                 xlabel2='Frequency (u)', ylabel2='Frequency (v)',
-#                 saveSrc='./outPut2.jpg')
+disply = logarithmic_display_of_image(output_image_fft_shift )
+compare_images(disply, output_image_restores, 
+                title1='5% lowest frequencies of the image in the x and y axis', 
+                title2='Inverse Fourier Transformed of 5% lowest frequencies of the image in the x and y axis',
+                xlabel1='Width', ylabel1='Height',
+                xlabel2='Frequency (u)', ylabel2='Frequency (v)',
+                saveSrc='./outPut2.jpg',
+                save=True)
 
+
+
+
+x_axis_sum = np.sum(I1_f, axis=1)
+y_axis_sum = np.sum(I1_f, axis=0)
+
+
+
+
+# Assuming you have already computed the sums along the x-axis and y-axis
+# x_axis_sum and y_axis_sum contain the sums of values along each row and column, respectively
+
+# Sort the sums along the x-axis and y-axis
+sorted_x_indices = np.argsort(x_axis_sum)[::-1]  # Sort in descending order
+sorted_y_indices = np.argsort(y_axis_sum)[::-1]  # Sort in descending order
+
+# Calculate the number of columns and rows corresponding to the top 5%
+top_5_percent_columns = int(0.05 * len(sorted_x_indices))
+top_5_percent_rows = int(0.05 * len(sorted_y_indices))
+
+# Select the top 5% dominant columns and rows
+top_5_percent_dominant_columns = sorted_x_indices[:top_5_percent_columns]
+top_5_percent_dominant_rows = sorted_y_indices[:top_5_percent_rows]
+
+# Now top_5_percent_dominant_columns contains the indices of the top 5% dominant columns
+# and top_5_percent_dominant_rows contains the indices of the top 5% dominant rows
 
 
