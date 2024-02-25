@@ -84,7 +84,7 @@ max_val = 255
 
 
 # Add salt and pepper noise with probability of 0.04 for salt and pepper
-noisy_image = salt_and_pepper_noise(I1, 0.04, 0.04)
+noisy_image = salt_and_pepper_noise(I1, 0.10, 0.10)
 
 # a = (0.2, 0.7)
 # kernel_edge_sharpen = delta - a[0] * laplcian
@@ -109,23 +109,24 @@ noisy_image = salt_and_pepper_noise(I1, 0.04, 0.04)
 a = (0.2, 0.7)
 kernel_edge_sharpen = delta - a[0] * laplcian
 
-# # plt.figure(figsize=(16,8));
-# # plt.subplot(2, 2, 1)
-# # plt.title("orginal")
-# # plt.imshow(I1, cmap="gray")
-
+# plt.figure(figsize=(16,8));
 # plt.subplot(2, 2, 1)
-# noisy1 = convolve_clip(noisy_image,kernel_edge_sharpen,min_val,max_val)
-# plt.imshow(noisy1, cmap="gray")
-# plt.title(f"noisy multiplied by a={a[0]}")
+# plt.title("orginal")
+# plt.imshow(I1, cmap="gray")
+
+plt.subplot(2, 2, 1)
+noisy1 = convolve_clip(noisy_image,kernel_edge_sharpen,min_val,max_val)
+plt.imshow(noisy1, cmap="gray")
+plt.title(f"noisy multiplied by a={a[0]}")
 
 
-# # 2*2 relatively to 4% S&P noise is 2*2 
-# # Apply median filtering with a kernel size of 3x3
-# filtered_image1 = cv2.medianBlur(noisy1.astype(np.uint8), 3)
-# plt.subplot(2, 2, 2)
-# plt.imshow(filtered_image1, cmap="gray")
-# plt.title(f"after median filter 2*2")
+# 2*2 relatively to 4% S&P noise is 2*2 
+# Apply median filtering with a kernel size of 3x3
+filtered_image1 = cv2.medianBlur(noisy1.astype(np.uint8), 11)
+plt.subplot(2, 2, 2)
+plt.imshow(filtered_image1, cmap="gray")
+plt.title(f"after median filter 2*2")
+plt.show()
 
 
 
@@ -152,26 +153,26 @@ kernel_edge_sharpen = delta - a[1] * laplcian
 # plt.show()
 
 
-a = (0.2, 0.7)
-kernel_edge_sharpen1 = delta - a[0] * laplcian
-kernel_edge_sharpen2 = delta - a[1] * laplcian
+# a = (0.2, 0.7)
+# kernel_edge_sharpen1 = delta - a[0] * laplcian
+# kernel_edge_sharpen2 = delta - a[1] * laplcian
 
 
-# Generate shot noise
-gamma = 300
-shot_noise = np.random.poisson(gamma, size=I1.shape)
-plt.subplot(1, 3, 1)
-plt.title("orginal")
-plt.imshow(I1, cmap="gray")
-plt.subplot(1, 3, 2)
-plt.imshow(I1+shot_noise, cmap="gray")
-plt.title(f"shot noise with gamma={gamma}")
+# # Generate shot noise
+# gamma = 300
+# shot_noise = np.random.poisson(gamma, size=I1.shape)
+# plt.subplot(1, 3, 1)
+# plt.title("orginal")
+# plt.imshow(I1, cmap="gray")
+# plt.subplot(1, 3, 2)
+# plt.imshow(I1+shot_noise, cmap="gray")
+# plt.title(f"shot noise with gamma={gamma}")
 
-noisy = I1+shot_noise
+# noisy = I1+shot_noise
 
-# Apply median filtering with a kernel size of 3x3
-filtered_image1 = cv2.medianBlur(noisy.astype(np.uint8), 3)
-plt.subplot(1, 3, 3)
-plt.imshow(filtered_image1, cmap="gray")
-plt.title(f"after median filter={gamma}")
-plt.show()
+# # Apply median filtering with a kernel size of 3x3
+# filtered_image1 = cv2.medianBlur(noisy.astype(np.uint8), 3)
+# plt.subplot(1, 3, 3)
+# plt.imshow(filtered_image1, cmap="gray")
+# plt.title(f"after median filter={gamma}")
+# plt.show()
